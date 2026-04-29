@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Placement System</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <a href="/admin_login"><button>Admin Login</button></a>
+    <h1>Internship & Placement Tracking System</h1>
+
+    {% if session.get('user') %}
+    <h3>Welcome, {{ session['user'] }}</h3>
+    {% elif session.get('admin') %}
+    <h3>Welcome Admin</h3>
+    {% endif %}
+
+    <a href="/logout"><button>Logout</button></a>
+
+    {% if error %}
+    <div
+      style="
+        background-color: #ffdddd;
+        color: #a94442;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+      "
+    >
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- STUDENT (keep open OR restrict if you want) -->
+    <h2>Add Student</h2>
+    <form action="/add_student" method="post">
+      <input name="name" placeholder="Name" required /><br />
+      <input type="email" name="email" placeholder="Email" required /><br />
+      <input name="dept" placeholder="Department" required /><br />
+      <input
+        type="number"
+        name="cgpa"
+        placeholder="CGPA"
+        min="0"
+        max="10"
+        step="0.1"
+        required
+      /><br />
+      <input name="skills" placeholder="Skills" required /><br />
+      <input name="resume" placeholder="Resume Link" required /><br />
+      <button type="submit">Add Student</button>
+    </form>
+
+    <h2>Students</h2>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        {% if session.get('admin') %}
+        <th>Action</th>
+        {% endif %}
+      </tr>
+
+      {% for s in students %}
+      <tr>
+        <td>{{ s[0] }}</td>
+        <td>{{ s[1] }}</td>
+        <td>{{ s[2] }}</td>
+
+        {% if session.get('admin') %}
+        <td>
+          <a href="/edit_student/{{ s[0] }}"><button>Edit</button></a>
+          <a href="/delete_student/{{ s[0] }}"><button>Delete</button></a>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- COMPANY (admin only) -->
+    {% if session.get('admin') %}
+    <h2>Add Company</h2>
+    <form action="/add_company" method="post">
+      <input name="name" placeholder="Company Name" required /><br />
+      <input name="location" placeholder="Location" required /><br />
+      <input name="industry" placeholder="Industry" required /><br />
+      <input
+        type="tel"
+        name="contact"
+        placeholder="Contact"
+        pattern="[0-9]{10}"
+        required
+      /><br />
+      <button>Add Company</button>
+    </form>
+    {% endif %}
+
+    <h2>Companies</h2>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        {% if session.get('admin') %}
+        <th>Action</th>
+        {% endif %}
+      </tr>
+
+      {% for c in companies %}
+      <tr>
+        <td>{{ c[0] }}</td>
+        <td>{{ c[1] }}</td>
+
+        {% if session.get('admin') %}
+        <td>
+          <a href="/edit_company/{{ c[0] }}"><button>Edit</button></a>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- JOB (admin only for add/edit) -->
+    {% if session.get('admin') %}
+    <h2>Add Job</h2>
+    <form action="/add_job" method="post">
+      <input name="role" placeholder="Role" required /><br />
+      <input name="type" placeholder="Internship / Placement" required /><br />
+      <input name="criteria" placeholder="Eligibility" required /><br />
+      <input
+        type="number"
+        name="salary"
+        placeholder="Salary"
+        min="0"
+        required
+      /><br />
+      <input name="company_id" placeholder="Company ID" required /><br />
+      <button>Add Job</button>
+    </form>
+    {% endif %}
+
+    <h2>Jobs</h2>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Role</th>
+        <th>Company ID</th>
+        {% if session.get('admin') %}
+        <th>Action</th>
+        {% endif %}
+      </tr>
+
+      {% for j in jobs %}
+      <tr>
+        <td>{{ j[0] }}</td>
+        <td>{{ j[1] }}</td>
+        <td>{{ j[5] }}</td>
+
+        {% if session.get('admin') %}
+        <td>
+          <a href="/edit_job/{{ j[0] }}"><button>Edit</button></a>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- APPLY (student feature) -->
+    <h2>Apply for Job</h2>
+    <form action="/apply" method="post">
+      <input name="student_id" placeholder="Student ID" required /><br />
+      <input name="job_id" placeholder="Job ID" required /><br />
+      <button>Apply</button>
+    </form>
+
+    <h2>Applications</h2>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Student Name</th>
+        <th>Job Role</th>
+        <th>Company</th>
+        <th>Status</th>
+      </tr>
+
+      {% for a in applications %}
+      <tr>
+        <td>{{ a[0] }}</td>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+        <td>{{ a[3] }}</td>
+        <td>{{ a[4] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Student Dashboard</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f4f6f9;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      .card {
+        border-radius: 12px;
+        border: none;
+        transition: 0.2s ease-in-out;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-modern {
+        width: 100%;
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        border: none;
+        padding: 8px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+      }
+
+      .btn-modern:disabled {
+        background: #6c757d !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark bg-dark px-3">
+      <span class="navbar-brand">Placement Portal</span>
+      <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+    </nav>
+
+    <div class="container mt-4">
+      <!-- WELCOME -->
+      <div class="alert alert-primary">
+        <h4>Welcome {{ student[1] }}</h4>
+        <p class="mb-0">
+          Department: {{ student[3] }} | CGPA: {{ student[4] }}
+        </p>
+      </div>
+
+      <!-- SEARCH -->
+      <form method="GET" action="/" class="row g-2 mb-3">
+        <div class="col-md-6">
+          <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by job role or company"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <select name="type" class="form-select">
+            <option value="">All Types</option>
+            <option value="Internship">Internship</option>
+            <option value="Placement">Placement</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100">Search</button>
+        </div>
+      </form>
+
+      <!-- JOBS -->
+      <h3 class="mb-3">Available Jobs</h3>
+
+      <div class="row">
+        {% for j in jobs %}
+        <div class="col-md-4 mb-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ j[1] }}</h5>
+
+              <p class="card-text">
+                <b>Company:</b> {{ j[5] }} <br />
+                <b>Location:</b> {{ j[6] }} <br />
+                <b>Type:</b> {{ j[2] }} <br />
+                <b>Salary:</b> ₹{{ j[4] }}
+              </p>
+
+              {% if j[0] in applied_jobs %}
+
+              <button class="btn btn-secondary w-100" disabled>
+                Already Applied
+              </button>
+
+              {% else %}
+
+              <a href="/apply/{{ j[0] }}">
+                <button class="btn-modern">Apply Now</button>
+              </a>
+
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- APPLICATIONS -->
+      <h3 class="mt-4">Your Applications</h3>
+
+      <table class="table table-bordered table-striped mt-2">
+        <tr class="table-dark">
+          <th>ID</th>
+          <th>Role</th>
+          <th>Company</th>
+          <th>Status</th>
+        </tr>
+
+        {% for a in applications %}
+        <tr>
+          <td>{{ a[0] }}</td>
+          <td>{{ a[1] }}</td>
+          <td>{{ a[2] }}</td>
+          <td>
+            {% if a[3] == 'Selected' %}
+            <span class="badge bg-success">{{ a[3] }}</span>
+            {% elif a[3] == 'Rejected' %}
+            <span class="badge bg-danger">{{ a[3] }}</span>
+            {% else %}
+            <span class="badge bg-warning text-dark">{{ a[3] }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </body>
+</html>

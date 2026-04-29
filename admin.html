@@ -1,0 +1,31 @@
+<h2>Admin Dashboard</h2>
+
+<a href="/logout"><button>Logout</button></a>
+
+<h3>Students</h3>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+  </tr>
+  {% for s in students %}
+  <tr>
+    <td>{{ s[0] }}</td>
+    <td>{{ s[1] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>Companies</h3>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+  </tr>
+  {% for c in companies %}
+  <tr>
+    <td>{{ c[0] }}</td>
+    <td>{{ c[1] }}</td>
+  </tr>
+  {% endfor %}
+</table>
